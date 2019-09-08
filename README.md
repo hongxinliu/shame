@@ -25,7 +25,7 @@ Towards low latency communication between processes and machines.
 ### Results
 Communication Delay on 90th Percentile (Unit: Milliseconds)
 
-| Message Size | 1MB | 10MB |
+|  | 1MB | 10MB |
 |---|---|---|
 | [LCM](https://lcm-proj.github.io/) | 0.187 | 1.436 |
 | Shame/UDPM | 0.180 | 1.378 |
