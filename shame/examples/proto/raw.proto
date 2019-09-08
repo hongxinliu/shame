@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package shame.examples;
+
+message Raw {
+  optional uint64 timestamp = 1;
+  optional string content = 2;
+}
