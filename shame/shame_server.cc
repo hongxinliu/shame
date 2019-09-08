@@ -21,11 +21,13 @@ class ShameServer {
   ShameServer(const std::string &name, const size_t size) :
   name_(name) {
     bi::shared_memory_object::remove(name_.c_str());
-    bi::managed_shared_memory segment(bi::create_only, name.c_str(), size);
+    bi::managed_shared_memory segment(bi::create_only, name_.c_str(), size);
+    std::cout << "Allocated " << size << " bytes for shared memory segment: " << name_ << std::endl;
   }
 
   ~ShameServer() {
     bi::shared_memory_object::remove(name_.c_str());
+    std::cout << "Removed shared memory segment: " << name_ << std::endl; 
   }
 
  protected:
@@ -36,8 +38,8 @@ std::unique_ptr<ShameServer> shame_server;
 
 void sig_handler(int sig) {
   if (sig == SIGINT) {
-    shame_server.reset();
     std::cout << "Exiting on signal SIGINT" << std::endl;
+    shame_server.reset();
     exit(1);
   }
 }

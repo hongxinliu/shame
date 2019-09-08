@@ -23,7 +23,6 @@ int main(int argc, char **argv) {
 
   shame::examples::Raw raw;
   raw.set_content(std::string(1024*1024, '+'));
-  std::cout << raw.descriptor()->full_name() << std::endl;
 
   while(true) {
     raw.set_timestamp(shame::now());
