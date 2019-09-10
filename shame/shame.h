@@ -12,15 +12,20 @@
 
 #include "shame/subscription.h"
 #include <google/protobuf/message_lite.h>
+#include <atomic>
 #include <cstdint>
 #include <functional>
 #include <list>
 #include <memory>
 #include <string>
+#include <thread>
+#include <tuple>
 #include <unordered_map>
 
 namespace shame {
 
+template <typename T>
+class ThreadSafeQueue;
 class Udpm;
 class Shm;
 
@@ -121,10 +126,18 @@ class Shame {
    */
   void callbackReceive(const std::string &channel, std::shared_ptr<uint8_t> data, size_t size, bool shared_memory);
 
+  /**
+   * @brief inner thread to dispatch messages
+   */
+  void threadDispatch();
+
  protected:
   std::shared_ptr<Udpm> udpm_;
   std::shared_ptr<Shm> shm_;
   std::unordered_map<std::string, std::list<Subscription *>> subscriptions_;
+  std::shared_ptr<ThreadSafeQueue<std::tuple<std::string, std::shared_ptr<uint8_t>, size_t, bool>>> msg_queue_;
+  std::shared_ptr<std::thread> handle_thread_dispatch_;
+  std::atomic<bool> enable_thread_dispatch_;
 };
 
 }  // namespace shame
