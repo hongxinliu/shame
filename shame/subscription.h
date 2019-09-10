@@ -102,7 +102,7 @@ class ProtobufSubscription : public Subscription {
 
  public:
   void callbackReceiveUdpm(const std::string &channel, std::shared_ptr<uint8_t> data, size_t size) override {
-    std::shared_ptr<ProtoType> msg(new ProtoType());
+    auto msg = std::make_shared<ProtoType>();
     if (msg->ParseFromArray(data.get(), size)) {
       callback_msg_(channel, msg, false);
     } else {
@@ -111,7 +111,7 @@ class ProtobufSubscription : public Subscription {
   };
 
   void callbackReceiveShm(const std::string &channel, ShameData *shame_data) override {
-    std::shared_ptr<ProtoType> msg(new ProtoType());
+    auto msg = std::make_shared<ProtoType>();
     shame_data->mutex_.lock_sharable();
     auto ret = msg->ParseFromArray(shame_data->data_.data(), shame_data->data_.size());
     shame_data->mutex_.unlock_sharable();
