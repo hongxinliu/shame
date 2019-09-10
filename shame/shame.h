@@ -108,9 +108,9 @@ class Shame {
                           const std::function<void(const std::string &,
                                                    std::shared_ptr<ProtoType>,
                                                    bool)> &callback_msg) {
-    auto subscription = new ProtobufSubscription<ProtoType>(channel, callback_msg);
+    auto subscription = std::make_shared<ProtobufSubscription<ProtoType>>(channel, callback_msg);
     subscriptions_[channel].push_back(subscription);
-    return subscription;
+    return subscription.get();
   }
 
   /**
@@ -134,7 +134,7 @@ class Shame {
  protected:
   std::shared_ptr<Udpm> udpm_;
   std::shared_ptr<Shm> shm_;
-  std::unordered_map<std::string, std::list<Subscription *>> subscriptions_;
+  std::unordered_map<std::string, std::list<std::shared_ptr<Subscription>>> subscriptions_;
   std::shared_ptr<ThreadSafeQueue<std::tuple<std::string, std::shared_ptr<uint8_t>, size_t, bool>>> msg_queue_;
   std::shared_ptr<std::thread> handle_thread_dispatch_;
   std::atomic<bool> enable_thread_dispatch_;

@@ -144,9 +144,9 @@ Subscription *Shame::subscribe(const std::string &channel,
                                                         size_t)> &callback_udpm,
                                const std::function<void(const std::string &channel,
                                                         ShameData *)> &callback_shm) {
-  auto subscription = new RawSubscription(channel, callback_udpm, callback_shm);
+  auto subscription = std::make_shared<RawSubscription>(channel, callback_udpm, callback_shm);
   subscriptions_[channel].push_back(subscription);
-  return subscription;
+  return subscription.get();
 }
 
 bool Shame::unsubscribe(Subscription *subscription) {
@@ -157,7 +157,7 @@ bool Shame::unsubscribe(Subscription *subscription) {
   auto items = subscriptions_.find(subscription->channel());
   if (items != subscriptions_.end()) {
     for (auto it = items->second.begin(); it != items->second.end(); ++it) {
-      if (*it == subscription) {
+      if (it->get() == subscription) {
         items->second.erase(it);
         return true;
       }
