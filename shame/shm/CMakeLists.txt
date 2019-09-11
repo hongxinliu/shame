@@ -8,3 +8,6 @@ install(TARGETS shm
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib)
+
+install(FILES shm.h
+        DESTINATION include/shame/shm)
