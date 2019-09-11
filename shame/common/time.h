@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2019 Hongxin Liu. All rights reserved.
- *
- * This software may be modified and distributed under the terms
- * of the BSD license.  See the LICENSE file for details.
+ * Copyright (c) 2019 Hongxin Liu. All rights reserved.
+ * Licensed under the MIT License. See the LICENSE file for details.
  *
  * Author: Hongxin Liu <hongxinliu.com> <github.com/hongxinliu>
  * Date: Sept.08, 2019
