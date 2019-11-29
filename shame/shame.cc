@@ -137,7 +137,7 @@ size_t Shame::publish(const std::string &channel, const google::protobuf::Messag
 
 Subscription *Shame::subscribe(
     const std::string &channel,
-    const std::function<void(const std::string &channel, std::shared_ptr<uint8_t>, size_t)>
+    const std::function<void(const std::string &channel, const std::shared_ptr<uint8_t>&, const size_t)>
         &callback_udpm,
     const std::function<void(const std::string &channel, const ShameData *)> &callback_shm) {
   auto subscription = std::make_shared<RawSubscription>(channel, callback_udpm, callback_shm);
@@ -163,8 +163,8 @@ bool Shame::unsubscribe(Subscription *subscription) {
   return false;
 }
 
-void Shame::callbackReceive(const std::string &channel, std::shared_ptr<uint8_t> data, size_t size,
-                            bool shared_memory) {
+void Shame::callbackReceive(const std::string &channel, const std::shared_ptr<uint8_t> &data, const size_t size,
+                            const bool shared_memory) {
   msg_queue_->enqueue(std::make_tuple(channel, data, size, shared_memory));
 }
 

@@ -89,7 +89,7 @@ class Shame {
    */
   Subscription *subscribe(
       const std::string &channel,
-      const std::function<void(const std::string &channel, std::shared_ptr<uint8_t>, size_t)>
+      const std::function<void(const std::string &channel, const std::shared_ptr<uint8_t>&, const size_t)>
           &callback_msg_udpm,
       const std::function<void(const std::string &channel, const ShameData *)> &callback_msg_shm);
 
@@ -103,8 +103,8 @@ class Shame {
             typename std::enable_if<
                 std::is_base_of<google::protobuf::MessageLite, ProtoType>::value>::type * = nullptr>
   Subscription *subscribe(const std::string &channel,
-                          const std::function<void(const std::string &, std::shared_ptr<ProtoType>,
-                                                   bool)> &callback_msg) {
+                          const std::function<void(const std::string &, const std::shared_ptr<ProtoType>&,
+                                                   const bool)> &callback_msg) {
     auto subscription = std::make_shared<ProtobufSubscription<ProtoType>>(channel, callback_msg);
     subscriptions_[channel].push_back(subscription);
     return subscription.get();
@@ -121,8 +121,8 @@ class Shame {
   /**
    * @brief callback function from udpm
    */
-  void callbackReceive(const std::string &channel, std::shared_ptr<uint8_t> data, size_t size,
-                       bool shared_memory);
+  void callbackReceive(const std::string &channel, const std::shared_ptr<uint8_t> &data, const size_t size,
+                       const bool shared_memory);
 
   /**
    * @brief inner thread to dispatch messages
