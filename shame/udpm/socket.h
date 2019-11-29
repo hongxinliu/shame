@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <boost/asio.hpp>
 #include <atomic>
+#include <boost/asio.hpp>
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -82,7 +82,8 @@ class Socket {
    * @brief start async receiving
    * @param callback_recv callback function on receiving
    */
-  void startAsyncReceiving(const std::function<void(std::shared_ptr<uint8_t>, size_t)> &callback_recv);
+  void startAsyncReceiving(
+      const std::function<void(std::shared_ptr<uint8_t>, size_t)> &callback_recv);
 
   /**
    * @brief stop async receiving

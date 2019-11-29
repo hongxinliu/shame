@@ -6,29 +6,28 @@
  * Date: Sept.08, 2019
  */
 
-#include "shame/shame.h"
-#include "shame/examples/proto/raw.pb.h"
-#include "shame/common/time.h"
-#include <thread>
 #include <iostream>
+#include <thread>
+#include "examples/proto/raw.pb.h"
+#include "shame/common/time.h"
+#include "shame/shame.h"
 
-void callbackReceive(const std::string &channel, std::shared_ptr<shame::examples::Raw> raw, bool shared_memory) {
+void callbackReceive(const std::string &channel, std::shared_ptr<shame::examples::Raw> raw,
+                     bool shared_memory) {
   static int count = 0;
   std::cout << "[" << ++count << "]"
             << " Received proto with " << raw->content().size() << " bytes"
-            << " on channel " << channel
-            << " via " << (shared_memory ? "shared memory" : "udpm")
-            << " after " << shame::now() - raw->timestamp() << " us"
-            << std::endl;
+            << " on channel " << channel << " via " << (shared_memory ? "shared memory" : "udpm")
+            << " after " << shame::now() - raw->timestamp() << " us" << std::endl;
 }
 
-int main(int argc, char **agrv) {
+int main() {
   shame::Shame shame;
   shame.subscribe<shame::examples::Raw>("Shame", callbackReceive);
   shame.startHandling();
 
   while (true) {
-    std::this_thread::sleep_for(std::chrono::hours(1));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
 
   return 0;

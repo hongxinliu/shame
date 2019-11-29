@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "shame/subscription.h"
 #include <google/protobuf/message_lite.h>
 #include <atomic>
 #include <cstdint>
@@ -19,6 +18,7 @@
 #include <thread>
 #include <tuple>
 #include <unordered_map>
+#include "shame/subscription.h"
 
 namespace shame {
 
@@ -36,10 +36,8 @@ class Shame {
    * @param ttl ttl of UDP message
    * @param name_shm name of managed shared memory, empty string accepted to disable shared memory
    */
-  Shame(const std::string &multicast_addr = "239.255.67.76",
-        const uint16_t multicast_port = 6776,
-        const int ttl = 0,
-        const std::string &name_shm = "Shame");
+  Shame(const std::string &multicast_addr = "239.255.67.76", const uint16_t multicast_port = 6776,
+        const int ttl = 0, const std::string &name_shm = "Shame");
 
  public:
   /**
@@ -60,7 +58,8 @@ class Shame {
    * @param shared_memory whether shared memory used
    * @return bytes published
    */
-  size_t publish(const std::string &channel, const void *data, const size_t size, const bool shared_memory);
+  size_t publish(const std::string &channel, const void *data, const size_t size,
+                 const bool shared_memory);
 
   /**
    * @brief publish string
@@ -78,7 +77,8 @@ class Shame {
    * @param shared_memory whether shared memory used
    * @return bytes published
    */
-  size_t publish(const std::string &channel, const google::protobuf::MessageLite &msg, const bool shared_memory);
+  size_t publish(const std::string &channel, const google::protobuf::MessageLite &msg,
+                 const bool shared_memory);
 
   /**
    * @brief subscribe as raw data
@@ -87,12 +87,11 @@ class Shame {
    * @param callback_msg_shm callback function on shm message
    * @return handle of this subscription
    */
-  Subscription *subscribe(const std::string &channel,
-                          const std::function<void(const std::string &channel,
-                                                   std::shared_ptr<uint8_t>,
-                                                   size_t)> &callback_msg_udpm,
-                          const std::function<void(const std::string &channel,
-                                                   ShameData *)> &callback_msg_shm);
+  Subscription *subscribe(
+      const std::string &channel,
+      const std::function<void(const std::string &channel, std::shared_ptr<uint8_t>, size_t)>
+          &callback_msg_udpm,
+      const std::function<void(const std::string &channel, ShameData *)> &callback_msg_shm);
 
   /**
    * @brief subscribe as protobuf message
@@ -101,10 +100,10 @@ class Shame {
    * @return handle of this subscription
    */
   template <typename ProtoType,
-            typename std::enable_if<std::is_base_of<google::protobuf::MessageLite, ProtoType>::value>::type * = nullptr>
+            typename std::enable_if<
+                std::is_base_of<google::protobuf::MessageLite, ProtoType>::value>::type * = nullptr>
   Subscription *subscribe(const std::string &channel,
-                          const std::function<void(const std::string &,
-                                                   std::shared_ptr<ProtoType>,
+                          const std::function<void(const std::string &, std::shared_ptr<ProtoType>,
                                                    bool)> &callback_msg) {
     auto subscription = std::make_shared<ProtobufSubscription<ProtoType>>(channel, callback_msg);
     subscriptions_[channel].push_back(subscription);
@@ -122,7 +121,8 @@ class Shame {
   /**
    * @brief callback function from udpm
    */
-  void callbackReceive(const std::string &channel, std::shared_ptr<uint8_t> data, size_t size, bool shared_memory);
+  void callbackReceive(const std::string &channel, std::shared_ptr<uint8_t> data, size_t size,
+                       bool shared_memory);
 
   /**
    * @brief inner thread to dispatch messages
@@ -133,7 +133,8 @@ class Shame {
   std::shared_ptr<Udpm> udpm_;
   std::shared_ptr<Shm> shm_;
   std::unordered_map<std::string, std::list<std::shared_ptr<Subscription>>> subscriptions_;
-  std::shared_ptr<ThreadSafeQueue<std::tuple<std::string, std::shared_ptr<uint8_t>, size_t, bool>>> msg_queue_;
+  std::shared_ptr<ThreadSafeQueue<std::tuple<std::string, std::shared_ptr<uint8_t>, size_t, bool>>>
+      msg_queue_;
   std::shared_ptr<std::thread> handle_thread_dispatch_;
   std::atomic<bool> enable_thread_dispatch_;
 };

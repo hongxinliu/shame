@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <string>
 #include <google/protobuf/message_lite.h>
 #include <boost/interprocess/managed_shared_memory.hpp>
+#include <string>
 
 namespace shame {
 

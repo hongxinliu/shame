@@ -1,13 +1,8 @@
-cmake_minimum_required(VERSION 3.0)
-project(udpm)
+set(TARGET_NAME udpm)
 
-add_library(udpm socket.cc udpm.cc)
-target_link_libraries(udpm boost_system pthread)
+file(GLOB HDRS *.h)
+file(GLOB SRCS *.cc)
 
-install(TARGETS udpm
-        RUNTIME DESTINATION bin
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib)
+add_library(${TARGET_NAME} OBJECT ${SRCS})
 
-install(FILES socket.h udpm.h
-        DESTINATION include/shame/udpm)
+install(FILES ${HDRS} DESTINATION include/shame/udpm)

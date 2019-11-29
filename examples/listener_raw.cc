@@ -6,17 +6,15 @@
  * Date: Sept.08, 2019
  */
 
-#include "shame/shame.h"
-#include <thread>
 #include <iostream>
+#include <thread>
+#include "shame/shame.h"
 
-void callbackReceiveUdpm(const std::string &channel, std::shared_ptr<uint8_t> data, size_t size) {
+void callbackReceiveUdpm(const std::string &channel, std::shared_ptr<uint8_t>, size_t size) {
   static int count = 0;
   std::cout << "[" << ++count << "]"
             << " Received " << size << " bytes"
-            << " on channel " << channel
-            << " via udpm"
-            << std::endl;
+            << " on channel " << channel << " via udpm" << std::endl;
 }
 
 void callbackReceiveShm(const std::string &channel, shame::ShameData *shame_data) {
@@ -24,19 +22,17 @@ void callbackReceiveShm(const std::string &channel, shame::ShameData *shame_data
   shame_data->mutex_.lock_sharable();
   std::cout << "[" << ++count << "]"
             << " Received " << shame_data->data_.size() << " bytes"
-            << " on channel " << channel
-            << " via shared memory"
-            << std::endl;
+            << " on channel " << channel << " via shared memory" << std::endl;
   shame_data->mutex_.unlock_sharable();
 }
 
-int main(int argc, char **agrv) {
+int main() {
   shame::Shame shame;
   shame.subscribe("Shame", callbackReceiveUdpm, callbackReceiveShm);
   shame.startHandling();
 
   while (true) {
-    std::this_thread::sleep_for(std::chrono::hours(1));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
   }
 
   return 0;

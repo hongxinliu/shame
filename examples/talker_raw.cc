@@ -6,15 +6,15 @@
  * Date: Sept.08, 2019
  */
 
-#include "shame/shame.h"
-#include <thread>
 #include <iostream>
+#include <thread>
+#include "shame/shame.h"
 
-int main(int argc, char **argv) {
+int main() {
   shame::Shame shame;
 
   const std::string channel("Shame");
-  const std::string str(1024*1024, '+');  // 1MB
+  const std::string str(1024 * 1024, '+');  // 1MB
   const bool shared_memory = true;
   int count = 0;
 
@@ -23,8 +23,7 @@ int main(int argc, char **argv) {
 
     std::cout << "[" << ++count << "]"
               << " Published " << size << " bytes"
-              << " on channel " << channel
-              << " via " << (shared_memory ? "shared memory" : "udpm")
+              << " on channel " << channel << " via " << (shared_memory ? "shared memory" : "udpm")
               << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }

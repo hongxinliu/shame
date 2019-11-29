@@ -10,13 +10,13 @@
 
 #include <atomic>
 #include <cstdint>
-#include <string>
-#include <memory>
-#include <utility>
 #include <functional>
-#include <unordered_map>
-#include <thread>
+#include <memory>
 #include <random>
+#include <string>
+#include <thread>
+#include <unordered_map>
+#include <utility>
 
 namespace shame {
 
@@ -47,9 +47,7 @@ class Udpm {
    * @param multicast_port port number of udpm multicast
    * @param ttl time to live, messages would not leave localhost while ttl=0
    */
-  Udpm(const std::string &multicast_addr,
-       const uint16_t multicast_port,
-       const int ttl);
+  Udpm(const std::string &multicast_addr, const uint16_t multicast_port, const int ttl);
 
   /**
    * @brief destructor
@@ -61,10 +59,8 @@ class Udpm {
    * @brief start async receiving
    * @param callback_recv callback function on receiving
    */
-  void startAsyncReceiving(const std::function<void(const std::string &,
-                                                    std::shared_ptr<uint8_t>,
-                                                    size_t,
-                                                    bool)> &callback_recv);
+  void startAsyncReceiving(const std::function<void(const std::string &, std::shared_ptr<uint8_t>,
+                                                    size_t, bool)> &callback_recv);
 
   /**
    * @brief stop async receiving
@@ -79,9 +75,7 @@ class Udpm {
    * @param shared_memory whether use shared memory
    * @return bytes transfered
    */
-  size_t send(const std::string &channel,
-              const void *payload,
-              const size_t len_payload,
+  size_t send(const std::string &channel, const void *payload, const size_t len_payload,
               const bool shared_memory);
 
  protected:
@@ -98,9 +92,7 @@ class Udpm {
   /**
    * @brief inner function to send message with header, channel and payload
    */
-  size_t send(const Header &header,
-              const std::string &channel,
-              const void *payload,
+  size_t send(const Header &header, const std::string &channel, const void *payload,
               const size_t len_payload);
 
  protected:

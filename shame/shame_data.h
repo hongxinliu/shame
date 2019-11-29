@@ -23,7 +23,8 @@
 namespace shame {
 
 template <typename T>
-using Allocator = boost::interprocess::allocator<T, boost::interprocess::managed_shared_memory::segment_manager>;
+using Allocator =
+    boost::interprocess::allocator<T, boost::interprocess::managed_shared_memory::segment_manager>;
 
 using String = boost::container::basic_string<char, std::char_traits<char>, Allocator<char>>;
 
@@ -38,9 +39,8 @@ using Map = boost::container::map<K, M, std::less<K>, Allocator<Pair<K, M>>>;
 
 class ShameData {
  public:
-  explicit ShameData(const boost::interprocess::managed_shared_memory &msm) :
-  data_(msm.get_segment_manager()) {
-  }
+  explicit ShameData(const boost::interprocess::managed_shared_memory &msm)
+      : data_(msm.get_segment_manager()) {}
 
  public:
   Vector<uint8_t> data_;

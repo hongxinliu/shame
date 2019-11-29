@@ -15,9 +15,7 @@ namespace shame {
 
 Shm::Shm(const std::string &name) : msm_(bi::open_only, name.c_str()) {}
 
-ShameData *Shm::find(const std::string &key) {
-  return msm_.find<ShameData>(key.c_str()).first;
-}
+ShameData *Shm::find(const std::string &key) { return msm_.find<ShameData>(key.c_str()).first; }
 
 ShameData *Shm::find_or_construct(const std::string &key) {
   return msm_.find_or_construct<ShameData>(key.c_str())(msm_);
@@ -36,8 +34,7 @@ size_t Shm::put(const std::string &key, const void *data, const size_t size) {
   return size;
 }
 
-size_t Shm::put(const std::string &key,
-                const google::protobuf::MessageLite &msg) {
+size_t Shm::put(const std::string &key, const google::protobuf::MessageLite &msg) {
   auto shame_data = find_or_construct(key);
   if (!shame_data) {
     return 0;

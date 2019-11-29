@@ -20,7 +20,9 @@ namespace shame {
  * @brief get current timestamp in microseconds
  */
 inline uint64_t now() {
-  return (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch())).count();
+  return (std::chrono::duration_cast<std::chrono::microseconds>(
+              std::chrono::system_clock::now().time_since_epoch()))
+      .count();
 }
 
 class Clock {
@@ -28,16 +30,12 @@ class Clock {
   /**
    * @brief record current timestamp
    */
-  void tick() {
-    start_ = now();
-  }
+  void tick() { start_ = now(); }
 
   /**
    * @brief get duration in microseconds from last tick
    */
-  uint64_t tock() {
-    return now() - start_;
-  }
+  uint64_t tock() { return now() - start_; }
 
  protected:
   uint64_t start_;

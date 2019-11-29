@@ -6,13 +6,13 @@
  * Date: Sept.08, 2019
  */
 
-#include "shame/shame.h"
-#include "shame/examples/proto/raw.pb.h"
-#include "shame/common/time.h"
-#include <thread>
 #include <iostream>
+#include <thread>
+#include "examples/proto/raw.pb.h"
+#include "shame/common/time.h"
+#include "shame/shame.h"
 
-int main(int argc, char **argv) {
+int main() {
   shame::Shame shame;
 
   const std::string channel("Shame");
@@ -20,16 +20,15 @@ int main(int argc, char **argv) {
   int count = 0;
 
   shame::examples::Raw raw;
-  raw.set_content(std::string(1024*1024, '+'));
+  raw.set_content(std::string(1024 * 1024, '+'));
 
-  while(true) {
+  while (true) {
     raw.set_timestamp(shame::now());
     shame.publish(channel, raw, shared_memory);
 
     std::cout << "[" << ++count << "]"
               << " Published proto with " << raw.content().size() << " bytes"
-              << " on channel " << channel
-              << " via " << (shared_memory ? "shared memory" : "udpm")
+              << " on channel " << channel << " via " << (shared_memory ? "shared memory" : "udpm")
               << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }

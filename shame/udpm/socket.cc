@@ -16,11 +16,11 @@ namespace shame {
 static const size_t kLenIpHeader = 20;
 static const size_t kLenUdpHeader = 8;
 
-Socket::Socket(const std::string &multicast_addr, const uint16_t multicast_port, const int ttl) :
-max_len_packet_((ttl == 0 ? 65535 : 1500) - kLenIpHeader - kLenUdpHeader),
-ep_multicast_(ba::ip::address::from_string(multicast_addr), multicast_port),
-socket_send_(ios_, ep_multicast_.protocol()),
-socket_recv_(ios_, ep_multicast_.protocol()) {
+Socket::Socket(const std::string &multicast_addr, const uint16_t multicast_port, const int ttl)
+    : max_len_packet_((ttl == 0 ? 65535 : 1500) - kLenIpHeader - kLenUdpHeader),
+      ep_multicast_(ba::ip::address::from_string(multicast_addr), multicast_port),
+      socket_send_(ios_, ep_multicast_.protocol()),
+      socket_recv_(ios_, ep_multicast_.protocol()) {
   // set TTL of send socket
   socket_send_.set_option(ba::ip::multicast::hops(ttl));
 
@@ -32,9 +32,7 @@ socket_recv_(ios_, ep_multicast_.protocol()) {
   socket_recv_.set_option(ba::ip::multicast::join_group(ep_multicast_.address()));
 }
 
-Socket::~Socket() {
-  stopAsyncReceiving();
-}
+Socket::~Socket() { stopAsyncReceiving(); }
 
 size_t Socket::send(const void *data, const size_t size) {
   return socket_send_.send_to(ba::buffer(data, size), ep_multicast_);
@@ -60,7 +58,8 @@ size_t Socket::send(const std::vector<boost::asio::mutable_buffers_1> &buffers) 
   return socket_send_.send_to(buffers, ep_multicast_);
 }
 
-void Socket::startAsyncReceiving(const std::function<void(std::shared_ptr<uint8_t>, size_t)> &callback_recv) {
+void Socket::startAsyncReceiving(
+    const std::function<void(std::shared_ptr<uint8_t>, size_t)> &callback_recv) {
   callback_recv_ = callback_recv;
   stopAsyncReceiving();
 
@@ -86,10 +85,10 @@ void Socket::stopAsyncReceiving() {
 void Socket::threadReceive() {
   // trigger the first async receive
   std::shared_ptr<uint8_t> buffer(new uint8_t[max_len_packet_], std::default_delete<uint8_t[]>());
-  socket_recv_.async_receive(ba::buffer(buffer.get(), max_len_packet_),
-                             boost::bind(&Socket::callbackReceive, this, buffer,
-                                         ba::placeholders::bytes_transferred(),
-                                         ba::placeholders::error()));
+  socket_recv_.async_receive(
+      ba::buffer(buffer.get(), max_len_packet_),
+      boost::bind(&Socket::callbackReceive, this, buffer, ba::placeholders::bytes_transferred(),
+                  ba::placeholders::error()));
 
   // handle async messages
   while (enable_thread_receive_.load()) {
@@ -106,10 +105,10 @@ void Socket::callbackReceive(std::shared_ptr<uint8_t> data, size_t size,
 
   // trigger next async receive
   std::shared_ptr<uint8_t> buffer(new uint8_t[max_len_packet_], std::default_delete<uint8_t[]>());
-  socket_recv_.async_receive(ba::buffer(buffer.get(), max_len_packet_),
-                             boost::bind(&Socket::callbackReceive, this, buffer,
-                                         ba::placeholders::bytes_transferred(),
-                                         ba::placeholders::error()));
+  socket_recv_.async_receive(
+      ba::buffer(buffer.get(), max_len_packet_),
+      boost::bind(&Socket::callbackReceive, this, buffer, ba::placeholders::bytes_transferred(),
+                  ba::placeholders::error()));
 }
 
 }  // namespace shame
