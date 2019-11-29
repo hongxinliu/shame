@@ -10,7 +10,7 @@
 #include <thread>
 #include "shame/shame.h"
 
-void callbackReceiveUdpm(const std::string &channel, std::shared_ptr<uint8_t>, size_t size) {
+void callbackReceiveUdpm(const std::string &channel, const std::shared_ptr<uint8_t>&, const size_t size) {
   static int count = 0;
   std::cout << "[" << ++count << "]"
             << " Received " << size << " bytes"

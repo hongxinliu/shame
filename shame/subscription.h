@@ -37,8 +37,8 @@ class Subscription {
   /**
    * callback function from lower level on udpm message
    */
-  virtual void callbackReceiveUdpm(const std::string &channel, std::shared_ptr<uint8_t> data,
-                                   size_t size) = 0;
+  virtual void callbackReceiveUdpm(const std::string &channel, const std::shared_ptr<uint8_t> &data,
+                                   const size_t size) = 0;
 
   /**
    * callback function from lower level on shm message
@@ -58,7 +58,7 @@ class RawSubscription : public Subscription {
    * @param callback_msg_shm callback function on shm message
    */
   RawSubscription(const std::string &channel,
-                  const std::function<void(const std::string &, std::shared_ptr<uint8_t>, size_t)>
+                  const std::function<void(const std::string &, const std::shared_ptr<uint8_t>&, const size_t)>
                       &callback_msg_udpm,
                   const std::function<void(const std::string &, ShameData *)> &callback_msg_shm)
       : Subscription(channel),
@@ -66,8 +66,8 @@ class RawSubscription : public Subscription {
         callback_msg_shm_(callback_msg_shm) {}
 
  public:
-  void callbackReceiveUdpm(const std::string &channel, std::shared_ptr<uint8_t> data,
-                           size_t size) override {
+  void callbackReceiveUdpm(const std::string &channel, const std::shared_ptr<uint8_t> &data,
+                           const size_t size) override {
     callback_msg_udpm_(channel, data, size);
   };
 
@@ -76,7 +76,7 @@ class RawSubscription : public Subscription {
   }
 
  protected:
-  const std::function<void(const std::string &, std::shared_ptr<uint8_t>, size_t)>
+  const std::function<void(const std::string &, const std::shared_ptr<uint8_t>&, const size_t)>
       callback_msg_udpm_;
   const std::function<void(const std::string &, ShameData *)> callback_msg_shm_;
 };
@@ -92,13 +92,13 @@ class ProtobufSubscription : public Subscription {
    * @param callback_msg callback function on message
    */
   ProtobufSubscription(const std::string &channel,
-                       const std::function<void(const std::string &, std::shared_ptr<ProtoType>,
-                                                bool)> &callback_msg)
+                       const std::function<void(const std::string &, const std::shared_ptr<ProtoType>&,
+                                                const bool)> &callback_msg)
       : Subscription(channel), callback_msg_(callback_msg) {}
 
  public:
-  void callbackReceiveUdpm(const std::string &channel, std::shared_ptr<uint8_t> data,
-                           size_t size) override {
+  void callbackReceiveUdpm(const std::string &channel, const std::shared_ptr<uint8_t> &data,
+                           const size_t size) override {
     auto msg = std::make_shared<ProtoType>();
     if (msg->ParseFromArray(data.get(), size)) {
       callback_msg_(channel, msg, false);
@@ -120,7 +120,7 @@ class ProtobufSubscription : public Subscription {
   }
 
  protected:
-  const std::function<void(const std::string &, std::shared_ptr<ProtoType>, bool)> callback_msg_;
+  const std::function<void(const std::string &, const std::shared_ptr<ProtoType>&, const bool)> callback_msg_;
 };
 
 }  // namespace shame

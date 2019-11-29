@@ -12,8 +12,8 @@
 #include "shame/common/time.h"
 #include "shame/shame.h"
 
-void callbackReceive(const std::string &channel, std::shared_ptr<shame::examples::Raw> raw,
-                     bool shared_memory) {
+void callbackReceive(const std::string &channel, const std::shared_ptr<shame::examples::Raw> &raw,
+                     const bool shared_memory) {
   static int count = 0;
   std::cout << "[" << ++count << "]"
             << " Received proto with " << raw->content().size() << " bytes"

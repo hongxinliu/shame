@@ -59,8 +59,8 @@ class Udpm {
    * @brief start async receiving
    * @param callback_recv callback function on receiving
    */
-  void startAsyncReceiving(const std::function<void(const std::string &, std::shared_ptr<uint8_t>,
-                                                    size_t, bool)> &callback_recv);
+  void startAsyncReceiving(const std::function<void(const std::string &, const std::shared_ptr<uint8_t>&,
+                                                    const size_t, const bool)> &callback_recv);
 
   /**
    * @brief stop async receiving
@@ -82,7 +82,7 @@ class Udpm {
   /**
    * @brief inner callback function on receiving
    */
-  void callbackReceive(std::shared_ptr<uint8_t> data, const size_t size);
+  void callbackReceive(const std::shared_ptr<uint8_t> &data, const size_t size);
 
   /**
    * @brief inner thread to pack messages
@@ -103,7 +103,7 @@ class Udpm {
   std::shared_ptr<ThreadSafeQueue<std::pair<std::shared_ptr<uint8_t>, size_t>>> msg_queue_;
   std::unordered_map<uint32_t, MessageBuffer> msg_buffer_;
 
-  std::function<void(const std::string &, std::shared_ptr<uint8_t>, size_t, bool)> callback_recv_;
+  std::function<void(const std::string &, const std::shared_ptr<uint8_t>&, const size_t, const bool)> callback_recv_;
   std::shared_ptr<std::thread> handle_thread_pack_;
   std::atomic<bool> enable_thread_pack_;
 

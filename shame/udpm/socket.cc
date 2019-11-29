@@ -59,7 +59,7 @@ size_t Socket::send(const std::vector<boost::asio::mutable_buffers_1> &buffers) 
 }
 
 void Socket::startAsyncReceiving(
-    const std::function<void(std::shared_ptr<uint8_t>, size_t)> &callback_recv) {
+    const std::function<void(const std::shared_ptr<uint8_t>&, const size_t)> &callback_recv) {
   callback_recv_ = callback_recv;
   stopAsyncReceiving();
 
@@ -96,8 +96,8 @@ void Socket::threadReceive() {
   }
 }
 
-void Socket::callbackReceive(std::shared_ptr<uint8_t> data, size_t size,
-                             boost::system::error_code ec) {
+void Socket::callbackReceive(const std::shared_ptr<uint8_t> &data, const size_t size,
+                             const boost::system::error_code ec) {
   // if no error found, callback to user
   if (!ec) {
     callback_recv_(data, size);
