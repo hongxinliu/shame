@@ -139,7 +139,7 @@ Subscription *Shame::subscribe(
     const std::string &channel,
     const std::function<void(const std::string &channel, std::shared_ptr<uint8_t>, size_t)>
         &callback_udpm,
-    const std::function<void(const std::string &channel, ShameData *)> &callback_shm) {
+    const std::function<void(const std::string &channel, const ShameData *)> &callback_shm) {
   auto subscription = std::make_shared<RawSubscription>(channel, callback_udpm, callback_shm);
   subscriptions_[channel].push_back(subscription);
   return subscription.get();

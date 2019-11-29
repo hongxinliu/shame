@@ -43,7 +43,7 @@ class Subscription {
   /**
    * callback function from lower level on shm message
    */
-  virtual void callbackReceiveShm(const std::string &channel, ShameData *shame_data) = 0;
+  virtual void callbackReceiveShm(const std::string &channel, const ShameData *shame_data) = 0;
 
  protected:
   std::string channel_;
@@ -57,10 +57,11 @@ class RawSubscription : public Subscription {
    * @param callback_msg_udpm callback function on udpm message
    * @param callback_msg_shm callback function on shm message
    */
-  RawSubscription(const std::string &channel,
-                  const std::function<void(const std::string &, const std::shared_ptr<uint8_t>&, const size_t)>
-                      &callback_msg_udpm,
-                  const std::function<void(const std::string &, ShameData *)> &callback_msg_shm)
+  RawSubscription(
+      const std::string &channel,
+      const std::function<void(const std::string &, const std::shared_ptr<uint8_t> &, const size_t)>
+          &callback_msg_udpm,
+      const std::function<void(const std::string &, const ShameData *)> &callback_msg_shm)
       : Subscription(channel),
         callback_msg_udpm_(callback_msg_udpm),
         callback_msg_shm_(callback_msg_shm) {}
@@ -71,14 +72,14 @@ class RawSubscription : public Subscription {
     callback_msg_udpm_(channel, data, size);
   };
 
-  void callbackReceiveShm(const std::string &channel, ShameData *shame_data) override {
+  void callbackReceiveShm(const std::string &channel, const ShameData *shame_data) override {
     callback_msg_shm_(channel, shame_data);
   }
 
  protected:
-  const std::function<void(const std::string &, const std::shared_ptr<uint8_t>&, const size_t)>
+  const std::function<void(const std::string &, const std::shared_ptr<uint8_t> &, const size_t)>
       callback_msg_udpm_;
-  const std::function<void(const std::string &, ShameData *)> callback_msg_shm_;
+  const std::function<void(const std::string &, const ShameData *)> callback_msg_shm_;
 };
 
 template <typename ProtoType,
@@ -91,9 +92,10 @@ class ProtobufSubscription : public Subscription {
    * @param channel channel name to subscribe
    * @param callback_msg callback function on message
    */
-  ProtobufSubscription(const std::string &channel,
-                       const std::function<void(const std::string &, const std::shared_ptr<ProtoType>&,
-                                                const bool)> &callback_msg)
+  ProtobufSubscription(
+      const std::string &channel,
+      const std::function<void(const std::string &, const std::shared_ptr<ProtoType> &, const bool)>
+          &callback_msg)
       : Subscription(channel), callback_msg_(callback_msg) {}
 
  public:
@@ -107,7 +109,7 @@ class ProtobufSubscription : public Subscription {
     }
   };
 
-  void callbackReceiveShm(const std::string &channel, ShameData *shame_data) override {
+  void callbackReceiveShm(const std::string &channel, const ShameData *shame_data) override {
     auto msg = std::make_shared<ProtoType>();
     shame_data->mutex_.lock_sharable();
     auto ret = msg->ParseFromArray(shame_data->data_.data(), shame_data->data_.size());
@@ -120,7 +122,8 @@ class ProtobufSubscription : public Subscription {
   }
 
  protected:
-  const std::function<void(const std::string &, const std::shared_ptr<ProtoType>&, const bool)> callback_msg_;
+  const std::function<void(const std::string &, const std::shared_ptr<ProtoType> &, const bool)>
+      callback_msg_;
 };
 
 }  // namespace shame

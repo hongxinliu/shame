@@ -39,12 +39,17 @@ using Map = boost::container::map<K, M, std::less<K>, Allocator<Pair<K, M>>>;
 
 class ShameData {
  public:
-  explicit ShameData(const boost::interprocess::managed_shared_memory &msm)
+  explicit ShameData(const boost::interprocess::managed_shared_memory& msm)
       : data_(msm.get_segment_manager()) {}
 
  public:
-  Vector<uint8_t> data_;
+  size_t size() const { return data_.size(); }
+
+  const uint8_t* data() const { return data_.data(); }
+
+ public:
   mutable boost::interprocess::interprocess_sharable_mutex mutex_;
+  Vector<uint8_t> data_;
 };
 
 }  // namespace shame

@@ -10,18 +10,19 @@
 #include <thread>
 #include "shame/shame.h"
 
-void callbackReceiveUdpm(const std::string &channel, const std::shared_ptr<uint8_t>&, const size_t size) {
+void callbackReceiveUdpm(const std::string &channel, const std::shared_ptr<uint8_t> &,
+                         const size_t size) {
   static int count = 0;
   std::cout << "[" << ++count << "]"
             << " Received " << size << " bytes"
             << " on channel " << channel << " via udpm" << std::endl;
 }
 
-void callbackReceiveShm(const std::string &channel, shame::ShameData *shame_data) {
+void callbackReceiveShm(const std::string &channel, const shame::ShameData *shame_data) {
   static int count = 0;
   shame_data->mutex_.lock_sharable();
   std::cout << "[" << ++count << "]"
-            << " Received " << shame_data->data_.size() << " bytes"
+            << " Received " << shame_data->size() << " bytes"
             << " on channel " << channel << " via shared memory" << std::endl;
   shame_data->mutex_.unlock_sharable();
 }

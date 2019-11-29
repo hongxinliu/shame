@@ -91,7 +91,7 @@ class Shame {
       const std::string &channel,
       const std::function<void(const std::string &channel, std::shared_ptr<uint8_t>, size_t)>
           &callback_msg_udpm,
-      const std::function<void(const std::string &channel, ShameData *)> &callback_msg_shm);
+      const std::function<void(const std::string &channel, const ShameData *)> &callback_msg_shm);
 
   /**
    * @brief subscribe as protobuf message

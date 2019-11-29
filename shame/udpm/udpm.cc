@@ -24,8 +24,8 @@ Udpm::Udpm(const std::string &multicast_addr, const uint16_t multicast_port, con
 Udpm::~Udpm() { stopAsyncReceiving(); }
 
 void Udpm::startAsyncReceiving(
-    const std::function<void(const std::string &, const std::shared_ptr<uint8_t>&, const size_t, const bool)>
-        &callback_recv) {
+    const std::function<void(const std::string &, const std::shared_ptr<uint8_t> &, const size_t,
+                             const bool)> &callback_recv) {
   stopAsyncReceiving();
   callback_recv_ = callback_recv;
   msg_queue_->clear();

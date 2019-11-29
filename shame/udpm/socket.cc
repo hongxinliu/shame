@@ -59,7 +59,7 @@ size_t Socket::send(const std::vector<boost::asio::mutable_buffers_1> &buffers) 
 }
 
 void Socket::startAsyncReceiving(
-    const std::function<void(const std::shared_ptr<uint8_t>&, const size_t)> &callback_recv) {
+    const std::function<void(const std::shared_ptr<uint8_t> &, const size_t)> &callback_recv) {
   callback_recv_ = callback_recv;
   stopAsyncReceiving();
 

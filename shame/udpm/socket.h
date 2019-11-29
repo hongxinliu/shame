@@ -83,7 +83,7 @@ class Socket {
    * @param callback_recv callback function on receiving
    */
   void startAsyncReceiving(
-      const std::function<void(const std::shared_ptr<uint8_t>&, const size_t)> &callback_recv);
+      const std::function<void(const std::shared_ptr<uint8_t> &, const size_t)> &callback_recv);
 
   /**
    * @brief stop async receiving
@@ -105,7 +105,8 @@ class Socket {
   /**
    * @brief inner callback function on receiving
    */
-  void callbackReceive(const std::shared_ptr<uint8_t> &data, const size_t size, const boost::system::error_code ec);
+  void callbackReceive(const std::shared_ptr<uint8_t> &data, const size_t size,
+                       const boost::system::error_code ec);
 
  protected:
   const size_t max_len_packet_;
@@ -115,7 +116,7 @@ class Socket {
   boost::asio::ip::udp::socket socket_send_;
   boost::asio::ip::udp::socket socket_recv_;
 
-  std::function<void(const std::shared_ptr<uint8_t>&, const size_t)> callback_recv_;
+  std::function<void(const std::shared_ptr<uint8_t> &, const size_t)> callback_recv_;
   std::shared_ptr<std::thread> handle_thread_receive_;
   std::atomic<bool> enable_thread_receive_;
 };
